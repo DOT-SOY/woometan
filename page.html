@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>작은컷 | JAGEUN CUT - 만화 출판사</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #1a1a1a;
+            --text-sub: #666666;
+            --accent: #333333;
+            --border: #eeeeee;
+            --section-padding: 80px 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: "Pretendard", -apple-system, sans-serif; 
+            line-height: 1.6; 
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            word-break: keep-all;
+        }
+
+        h1, h2, h3, .serif { font-family: 'Nanum Myeongjo', serif; }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(255,255,255,0.95);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+        }
+        .logo img { height: 40px; display: block; }
+        .nav-links { display: flex; list-style: none; gap: 30px; }
+        .nav-links a { 
+            text-decoration: none; color: var(--text-main); 
+            font-size: 0.9rem; font-weight: 500; 
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text-sub); }
+
+        /* Hero Section */
+        header {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            margin-top: 60px;
+        }
+        .hero-slogan { font-size: 2.5rem; margin-bottom: 20px; letter-spacing: -0.02em; }
+        .hero-sub { color: var(--text-sub); font-size: 1.1rem; }
+
+        /* Sections General */
+        section { padding: var(--section-padding); max-width: 1100px; margin: 0 auto; }
+        .section-title { 
+            font-size: 1.8rem; margin-bottom: 40px; 
+            border-bottom: 2px solid var(--accent);
+            display: inline-block; padding-bottom: 10px;
+        }
+
+        /* Books Grid */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        .book-item { cursor: pointer; }
+        .book-cover { 
+            background: #f9f9f9; width: 100%; aspect-ratio: 3/4; 
+            margin-bottom: 15px; border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+        .book-item:hover .book-cover { transform: translateY(-5px); }
+        .book-info h4 { font-size: 1rem; margin-bottom: 5px; }
+        .book-info p { font-size: 0.85rem; color: var(--text-sub); }
+
+        /* About & Philosophy */
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .philosophy-text { font-size: 1.1rem; line-height: 1.8; }
+        .work-process { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem; 
+        }
+        .process-card { padding: 20px; border: 1px solid var(--border); }
+
+        /* Submissions */
+        .submission-box { 
+            background: #fcfcfc; border: 1px solid var(--border); padding: 40px; 
+        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.9rem; margin-bottom: 8px; font-weight: 600; }
+        input, textarea { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; 
+            font-family: inherit;
+        }
+        button { 
+            background: var(--accent); color: white; border: none; 
+            padding: 15px 30px; cursor: pointer; font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #f9f9f9; padding: 60px 5%; font-size: 0.85rem;
+            color: var(--text-sub); border-top: 1px solid var(--border);
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px; margin-bottom: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* 심플함을 위해 모바일 메뉴 생략 또는 햄버거 구현 필요 */
+            .hero-slogan { font-size: 1.8rem; }
+            .about-content { grid-template-columns: 1fr; }
+            .work-process { grid-template-columns: 1fr; }
+            .section-padding { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <img src="image_b870b9.png" alt="작은컷 로고">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#books">Books</a></li>
+            <li><a href="#submissions">Submissions</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1 class="hero-slogan">만화를 책으로 만드는 사람들</h1>
+        <p class="hero-sub">이야기를 끝까지 책임집니다.</p>
+    </header>
+
+    <hr style="border: 0; border-top: 1px solid var(--border); width: 80%; margin: 0 auto;">
+
+    <section id="about">
+        <h2 class="section-title">About</h2>
+        <div class="about-content">
+            <div class="philosophy-text">
+                <p><strong>작은컷은 내부 편집과 제작 역량을 중심으로 움직이는 만화 출판사입니다.</strong></p><br>
+                <p>우리는 화려한 플랫폼보다 종이 위에 새겨진 한 컷의 가치를 믿습니다. 번역의 뉘앙스부터 종이의 질감까지, 한 권의 만화가 독자의 서재에 놓이기까지의 모든 과정을 내부에서 직접 책임지고 조율합니다.</p>
+            </div>
+            <div class="work-process">
+                <div class="process-card">
+                    <h4>편집·로컬라이징</h4>
+                    <p>원작의 의도를 가장 정확한 우리말과 디자인으로 옮깁니다.</p>
+                </div>
+                <div class="process-card">
+                    <h4>디자인·제작</h4>
+                    <p>물성을 가진 '책'으로서의 소장 가치를 극대화합니다.</p>
+                </div>
+                <div class="process-card">
+                    <h4>판권·라이선스</h4>
+                    <p>국내외 파트너와 신뢰를 바탕으로 투명하게 소통합니다.</p>
+                </div>
+                <div class="process-card">
+                    <h4>운영·관리</h4>
+                    <p>소규모의 유연함으로 지속 가능한 출판을 실천합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="books" style="background-color: #fafafa; max-width: 100%;">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <h2 class="section-title">Books</h2>
+            <div class="book-grid">
+                <div class="book-item">
+                    <div class="book-cover"></div>
+                    <div class="book-info">
+                        <h4>작품 제목 01</h4>
+                        <p>작가명 | 편집부 역</p>
+                    </div>
+                </div>
+                <div class="book-item">
+                    <div class="book-cover"></div>
+                    <div class="book-info">
+                        <h4>작품 제목 02</h4>
+                        <p>작가명 | 편집부 역</p>
+                    </div>
+                </div>
+                <div class="book-item">
+                    <div class="book-cover"></div>
+                    <div class="book-info">
+                        <h4>작품 제목 03</h4>
+                        <p>작가명 | 편집부 역</p>
+                    </div>
+                </div>
+                <div class="book-item">
+                    <div class="book-cover"></div>
+                    <div class="book-info">
+                        <h4>작품 제목 04</h4>
+                        <p>작가명 | 편집부 역</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="submissions">
+        <h2 class="section-title">Submissions</h2>
+        <div class="submission-box">
+            <h3 style="margin-bottom: 20px;">함께 이야기를 완성할 작가님을 찾습니다.</h3>
+            <p style="margin-bottom: 30px; color: var(--text-sub);">작은컷은 장르에 얽매이지 않고, 자신만의 선명한 세계관을 가진 원고를 기다립니다. 모든 투고 원고는 편집부에서 세심하게 검토합니다.</p>
+            
+            <form>
+                <div class="form-group">
+                    <label>성함 / 필명</label>
+                    <input type="text" placeholder="성함을 입력해 주세요.">
+                </div>
+                <div class="form-group">
+                    <label>연락처</label>
+                    <input type="email" placeholder="이메일 주소를 입력해 주세요.">
+                </div>
+                <div class="form-group">
+                    <label>작품 소개 및 링크</label>
+                    <textarea rows="6" placeholder="작품의 시놉시스나 포트폴리오 링크를 남겨주세요."></textarea>
+                </div>
+                <button type="button">투고 문의하기</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4 style="color: var(--text-main); margin-bottom: 15px;">Contact</h4>
+                <p>General: info@jageuncut.com</p>
+                <p>Rights: rights@jageuncut.com</p>
+                <p>Submissions: edit@jageuncut.com</p>
+            </div>
+            <div>
+                <h4 style="color: var(--text-main); margin-bottom: 15px;">Information</h4>
+                <p>출판사 작은컷</p>
+                <p>사업자등록번호: 000-00-00000</p>
+                <p>서울특별시 어딘가구 어떤로 123</p>
+            </div>
+            <div>
+                <h4 style="color: var(--text-main); margin-bottom: 15px;">Follow</h4>
+                <p><a href="#" style="color: inherit; text-decoration: none;">Instagram</a></p>
+                <p><a href="#" style="color: inherit; text-decoration: none;">Twitter (X)</a></p>
+            </div>
+        </div>
+        <p>© 2024 Jageun Cut Publishing. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // 간단한 스크롤 애니메이션 효과
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
