@@ -12,191 +12,76 @@
     <style>
         :root {
             --bg-color: #ffffff;
-            --text-main: #1a1a1a;
-            --text-sub: #666666;
-            --accent: #333333;
-            --border: #eeeeee;
-            --section-padding: 80px 20px;
+            --bg-sub: #f9f9fb;
+            --text-main: #1d1d1f;
+            --text-sub: #6e6e73;
+            --accent: #000000;
+            --border: #e5e5e7;
+            --container-width: 1100px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: "Pretendard", -apple-system, sans-serif;
-            line-height: 1.6;
+            line-height: 1.7;
             color: var(--text-main);
             background-color: var(--bg-color);
             word-break: keep-all;
+            -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3 { font-family: 'Nanum Myeongjo', serif; }
+        h1, h2, h3 { font-family: 'Nanum Myeongjo', serif; font-weight: 700; letter-spacing: -0.02em; }
 
-        /* Navigation */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255,255,255,0.95);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
+            position: fixed; top: 0; width: 100%; height: 70px; padding: 0 5%;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); display: flex;
+            align-items: center; justify-content: space-between; z-index: 1000;
         }
 
-        .logo img { height: 40px; }
+        .logo img { height: 26px; }
+        .nav-links { display: flex; list-style: none; gap: 32px; align-items: center; }
+        .nav-links li { position: relative; }
+        .nav-links a { text-decoration: none; color: var(--text-main); font-size: 0.95rem; font-weight: 500; padding: 25px 0; display: block; }
+        .nav-links a.active { font-weight: 700; color: var(--accent); }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
+        .dropdown-menu {
+            position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid var(--border);
+            min-width: 220px; padding: 12px 0; border-radius: 6px; opacity: 0; visibility: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: all 0.3s;
         }
+        .nav-links li:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu a { padding: 10px 24px; font-size: 0.88rem; font-weight: 400; }
+        .dropdown-menu a:hover { background: var(--bg-sub); }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
+        header { height: 100vh; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
+        .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; }
+        .hero-content { position: relative; z-index: 2; padding: 0 24px; }
+        .hero-slogan { font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1.1; margin-bottom: 24px; }
 
-        /* Hero */
-        header {
-            height: 80vh;
-            margin-top: 60px;
-            position: relative;
-            overflow: hidden;
-            display: grid;
-            place-items: center;
-            text-align: center;
-            color: #fff;
-        }
+        section { padding: 100px 24px; max-width: var(--container-width); margin: 0 auto; }
+        .section-title { font-size: 2.4rem; margin-bottom: 60px; }
+        .section-title span { display: block; font-size: 0.85rem; font-family: Pretendard; color: var(--text-sub); margin-bottom: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
 
-        .hero-video {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
+        /* Home Content Styles */
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; }
+        .book-card { background: var(--bg-sub); border-radius: 8px; overflow: hidden; transition: transform 0.3s; }
+        .book-card:hover { transform: translateY(-10px); }
+        .book-img { width: 100%; aspect-ratio: 3/4; background: #ddd; }
+        .book-info { padding: 24px; }
 
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.35);
-            z-index: 1;
-        }
+        .info-card { padding: 40px; background: var(--bg-sub); border-radius: 12px; margin-bottom: 20px; }
+        .info-card h4 { margin-bottom: 15px; font-size: 1.25rem; }
+        .timeline li { border-left: 1px solid var(--accent); padding: 0 0 40px 30px; position: relative; list-style: none; }
+        .timeline li::before { content: ""; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; background: var(--accent); border-radius: 50%; }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 900px;
-            padding: 0 20px;
-        }
+        footer { padding: 80px 5%; background: #111; color: #777; font-size: 0.85rem; }
+        .hidden { display: none !important; }
+        .view { animation: fadeIn 0.6s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .hero-slogan {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .hero-sub {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.85);
-        }
-
-        section {
-            padding: var(--section-padding);
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--accent);
-            display: inline-block;
-            padding-bottom: 10px;
-        }
-
-        /* Books */
-        .book-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 40px;
-        }
-
-        .book-cover {
-            width: 100%;
-            aspect-ratio: 3 / 4;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            margin-bottom: 15px;
-            transition: transform 0.3s;
-            background: #f9f9f9;
-        }
-
-        .book-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .book-item:hover .book-cover {
-            transform: translateY(-5px);
-        }
-
-        .book-info h4 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .book-info p {
-            font-size: 0.85rem;
-            color: var(--text-sub);
-        }
-
-        /* About */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-        }
-
-        .work-process {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            font-size: 0.9rem;
-        }
-
-        .process-card {
-            padding: 20px;
-            border: 1px solid var(--border);
-        }
-
-        /* Footer */
-        footer {
-            background: #f9f9f9;
-            padding: 60px 5%;
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero-slogan { font-size: 1.8rem; }
-            .about-content { grid-template-columns: 1fr; }
-            .work-process { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 850px) { .nav-links { display: none; } }
     </style>
 </head>
 
@@ -204,113 +89,234 @@
 
 <nav>
     <div class="logo">
-        <img src="https://github.com/user-attachments/assets/87b269f0-faf1-499d-ac6c-f16cc964248b"
-             alt="작은컷 로고">
+        <a href="#/"><img src="https://github.com/user-attachments/assets/87b269f0-faf1-499d-ac6c-f16cc964248b" alt="작은컷"></a>
     </div>
     <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#books">Books</a></li>
-        <li><a href="#submissions">Submissions</a></li>
+        <li><a href="#/" data-route="/">Home</a></li>
+        <li><a href="#/books" data-route="/books">Books</a></li>
+        <li><a href="#/submissions" data-route="/submissions">Submissions</a></li>
+        <li>
+            <a href="javascript:void(0)">Company Info ▾</a>
+            <ul class="dropdown-menu">
+                <li><a href="#/philosophy" data-route="/philosophy">출판 철학 · 편집 기준</a></li>
+                <li><a href="#/process" data-route="/process">작업 프로세스</a></li>
+                <li><a href="#/history" data-route="/history">회사 연혁</a></li>
+                <li><a href="#/partnership" data-route="/partnership">판권 · 제휴 안내</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0)">Archive ▾</a>
+            <ul class="dropdown-menu">
+                <li><a href="#/news" data-route="/news">출간 소식</a></li>
+                <li><a href="#/events" data-route="/events">전시 · 행사 기록</a></li>
+                <li><a href="#/notice" data-route="/notice">공지사항</a></li>
+            </ul>
+        </li>
     </ul>
 </nav>
 
-<header>
-    <video class="hero-video"
-           autoplay
-           muted
-           loop
-           playsinline
-           preload="metadata">
-        <source src="https://cdn.pixabay.com/video/2022/07/08/123514-728292574_large.mp4"
-                type="video/mp4">
+<header id="hero-header">
+    <video class="hero-video" autoplay muted loop playsinline>
+        <source src="https://cdn.pixabay.com/video/2022/07/08/123514-728292574_large.mp4" type="video/mp4">
     </video>
-    <div class="hero-overlay"></div>
-
     <div class="hero-content">
-        <h1 class="hero-slogan">만화를 책으로 만드는 사람들</h1>
-        <p class="hero-sub">이야기를 끝까지 책임집니다.</p>
+        <h1 class="hero-slogan">한 컷의 진심을<br>책으로 완성하다</h1>
+        <p style="letter-spacing:0.3em; font-weight:300; opacity:0.7;">JAGEUN CUT PUBLISHING</p>
     </div>
 </header>
 
-<section id="about">
-    <h2 class="section-title">About</h2>
-    <div class="about-content">
-        <p>
-            <strong>작은컷은 내부 편집과 제작 역량을 중심으로 움직이는 만화 출판사입니다.</strong><br><br>
-            화려한 플랫폼보다 종이 위에 남는 한 컷의 가치를 믿습니다.
-            번역부터 제작까지 모든 과정을 내부에서 책임집니다.
-        </p>
-        <div class="work-process">
-            <div class="process-card">편집·로컬라이징</div>
-            <div class="process-card">디자인·제작</div>
-            <div class="process-card">판권·라이선스</div>
-            <div class="process-card">운영·관리</div>
-        </div>
-    </div>
-</section>
+<main id="app"></main>
 
-<section id="books" style="background:#fafafa; max-width:100%;">
-    <div style="max-width:1100px; margin:0 auto;">
-        <h2 class="section-title">Books</h2>
+<div id="home-sections">
+    <section id="home-books">
+        <h2 class="section-title"><span>New Releases</span>최신 출간 도서</h2>
         <div class="book-grid">
-
-            <div class="book-item">
-                <div class="book-cover">
-                    <img src="https://github.com/user-attachments/assets/a0cb901c-a2eb-457c-9f93-c6bbfbf0dd21">
-                </div>
-                <div class="book-info">
-                    <h4>작품 제목 01</h4>
-                    <p>작가명 | 편집부 역</p>
-                </div>
+            <div class="book-card">
+                <div class="book-img"><img src="https://github.com/user-attachments/assets/a0cb901c-a2eb-457c-9f93-c6bbfbf0dd21" style="width:100%;height:100%;object-fit:cover;"></div>
+                <div class="book-info"><h4>작품 제목 01</h4><p>작가명 | 작은컷 편집부</p></div>
             </div>
-
-            <div class="book-item">
-                <div class="book-cover">
-                    <img src="https://github.com/user-attachments/assets/1bbeff5a-ff8e-4dd0-a082-91189494f83f">
-                </div>
-                <div class="book-info">
-                    <h4>작품 제목 02</h4>
-                    <p>작가명 | 편집부 역</p>
-                </div>
+            <div class="book-card">
+                <div class="book-img"><img src="https://github.com/user-attachments/assets/1bbeff5a-ff8e-4dd0-a082-91189494f83f" style="width:100%;height:100%;object-fit:cover;"></div>
+                <div class="book-info"><h4>작품 제목 02</h4><p>작가명 | 작은컷 편집부</p></div>
             </div>
-
-            <div class="book-item">
-                <div class="book-cover">
-                    <img src="https://github.com/user-attachments/assets/42318a5d-fe1c-4eb4-ba75-13aa1184dd2d">
-                </div>
-                <div class="book-info">
-                    <h4>작품 제목 03</h4>
-                    <p>작가명 | 편집부 역</p>
-                </div>
+            <div class="book-card">
+                <div class="book-img"><img src="https://github.com/user-attachments/assets/42318a5d-fe1c-4eb4-ba75-13aa1184dd2d" style="width:100%;height:100%;object-fit:cover;"></div>
+                <div class="book-info"><h4>작품 제목 03</h4><p>작가명 | 작은컷 편집부</p></div>
             </div>
-
-            <div class="book-item">
-                <div class="book-cover">
-                    <img src="https://github.com/user-attachments/assets/d52d85ea-5052-4fa6-9dcf-1147bba98d95">
-                </div>
-                <div class="book-info">
-                    <h4>작품 제목 04</h4>
-                    <p>작가명 | 편집부 역</p>
-                </div>
-            </div>
-
         </div>
-    </div>
-</section>
+    </section>
+
+    <section id="home-submissions" style="background:var(--bg-sub); max-width:100%;">
+        <div style="max-width:var(--container-width); margin:0 auto;">
+            <h2 class="section-title"><span>Submissions</span>원고 투고 안내</h2>
+            <div class="info-card" style="background:#fff;">
+                <p style="font-size:1.1rem; line-height:1.8;">작은컷은 장르와 형식에 구애받지 않고, 종이 위에서 가장 빛날 수 있는 이야기를 기다립니다. 상시 투고를 통해 새로운 작가님들과의 소중한 인연을 기대합니다.</p>
+                <div style="margin-top:30px; display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                    <div><strong>접수 메일</strong><p>submission@jageuncut.com</p></div>
+                    <div><strong>검토 기간</strong><p>접수 후 최대 4주 (개별 회신)</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
 <footer>
-    <div class="footer-grid">
+    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;">
         <div>
-            <strong>Contact</strong><br>
-            info@jageuncut.com
+            <p><strong>작은컷 출판사</strong></p>
+            <p style="margin-top:10px;">서울특별시 마포구 어딘가 123 작은컷 빌딩</p>
         </div>
-        <div>
-            출판사 작은컷<br>
-            서울특별시 어딘가
+        <div style="display:flex; gap:20px;">
+            <span>Instagram</span> <span>Twitter</span> <span>Youtube</span>
         </div>
     </div>
-    © 2024 Jageun Cut Publishing
 </footer>
+
+<script>
+(function () {
+    const app = document.getElementById('app');
+    const homeSections = document.getElementById('home-sections');
+    const hero = document.getElementById('hero-header');
+    const navLinks = Array.from(document.querySelectorAll('.nav-links a[data-route]'));
+
+    function setActive(path) {
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('data-route') === path));
+    }
+
+    function renderView(html) {
+        hero.classList.add('hidden');
+        homeSections.classList.add('hidden');
+        app.innerHTML = '<div class="view">' + html + '</div>';
+        window.scrollTo(0,0);
+    }
+
+    function renderHome() {
+        hero.classList.remove('hidden');
+        homeSections.classList.remove('hidden');
+        app.innerHTML = '';
+        window.scrollTo(0,0);
+    }
+
+    const views = {
+        '/': renderHome,
+        '/books': () => {
+            renderHome();
+            const el = document.getElementById('home-books');
+            window.scrollTo({ top: el.offsetTop - 70, behavior: 'smooth' });
+        },
+        '/submissions': () => {
+            renderHome();
+            const el = document.getElementById('home-submissions');
+            window.scrollTo({ top: el.offsetTop - 70, behavior: 'smooth' });
+        },
+        '/philosophy': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>Our Belief</span>출판 철학 및 편집 기준</h2>
+                <div class="info-card">
+                    <h4>"화면 너머, 손끝에 남는 가치"</h4>
+                    <p>작은컷은 디지털 콘텐츠의 범람 속에서 '책'이라는 물성이 주는 힘을 믿습니다. 우리는 단순히 만화를 인쇄하는 것이 아니라, 작품이 가진 고유의 호흡을 종이 위에 가장 최적화된 형태로 구현하는 것을 목표로 합니다.</p>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
+                    <div class="info-card">
+                        <h4>편집 원칙</h4>
+                        <p>원작의 의도를 해치지 않는 세밀한 로컬라이징, 가독성을 최우선으로 하는 식자 설계, 작품의 분위기를 결정짓는 종이 선정을 고수합니다.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>품질 관리</h4>
+                        <p>모든 도서는 편집자가 직접 인쇄소 감리에 참여하여, 데이터와 실제 결과물의 오차를 최소화합니다.</p>
+                    </div>
+                </div>
+            </section>
+        `),
+        '/process': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>Work Flow</span>작업 프로세스</h2>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div class="info-card"><strong>STEP 01. 기획 및 계약</strong><p>국내외 우수 IP 발굴 및 작가와의 긴밀한 소통을 통한 출간 방향 설정</p></div>
+                    <div class="info-card"><strong>STEP 02. 편집 및 디자인</strong><p>작품별 전담 편집자의 로컬라이징과 북 디자이너의 맞춤형 표지/내지 설계</p></div>
+                    <div class="info-card"><strong>STEP 03. 인쇄 및 제작</strong><p>협력 인쇄사와의 파트너십을 통한 고품질 제작 및 철저한 후가공 관리</p></div>
+                    <div class="info-card"><strong>STEP 04. 유통 및 마케팅</strong><p>온·오프라인 서점 유통 및 작품별 타겟 독자를 위한 맞춤형 프로모션</p></div>
+                </div>
+            </section>
+        `),
+        '/history': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>History</span>회사 연혁</h2>
+                <ul class="timeline">
+                    <li><strong>2024</strong> <span>오리지널 IP 확장 및 통합 물류 시스템 구축</span></li>
+                    <li><strong>2022</strong> <span>자사 편집 스타일 가이드 정립 및 품질 인증 획득</span></li>
+                    <li><strong>2021</strong> <span>누적 출간 종수 100종 돌파</span></li>
+                    <li><strong>2020</strong> <span>해외 판권 수출입 비즈니스 개시</span></li>
+                    <li><strong>2019</strong> <span>작은컷(JAGEUN CUT) 출판사 설립</span></li>
+                </ul>
+            </section>
+        `),
+        '/partnership': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>Business</span>판권 및 제휴 안내</h2>
+                <div class="info-card">
+                    <h4>2차 저작권 제휴</h4>
+                    <p>작은컷이 보유한 우수한 만화 IP의 영상화, 게임화, 굿즈 제작 등 2차 저작권 관련 제휴를 환영합니다.</p>
+                    <p style="margin-top:15px; font-weight:bold;">Contact: biz@jageuncut.com</p>
+                </div>
+                <div class="info-card">
+                    <h4>판권 수출입 문의</h4>
+                    <p>한국 만화의 해외 수출 및 해외 우수 도서의 국내 출간 판권 문의는 아래 메일로 부탁드립니다.</p>
+                    <p style="margin-top:15px; font-weight:bold;">Contact: rights@jageuncut.com</p>
+                </div>
+            </section>
+        `),
+        '/news': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>Archive</span>출간 소식</h2>
+                <div class="info-card">
+                    <p style="color:var(--text-sub);">[2024.11.20] 신간 <작품 제목 01> 1~3권 동시 출간 안내</p>
+                </div>
+                <div class="info-card">
+                    <p style="color:var(--text-sub);">[2024.11.05] <작품 제목 02> 완결 기념 한정판 박스 세트 예약 판매 시작</p>
+                </div>
+                <div class="info-card">
+                    <p style="color:var(--text-sub);">[2024.10.25] 절판 도서 <작품 제목 03> 재판 인쇄 확정 안내</p>
+                </div>
+            </section>
+        `),
+        '/events': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>Archive</span>전시 · 행사 기록</h2>
+                <div class="info-card">
+                    <h4>2024 서울 국제 도서전 참가</h4>
+                    <p>독자들과 직접 만나는 소중한 시간이었습니다. 방문해주신 모든 분께 감사드립니다.</p>
+                </div>
+                <div class="info-card">
+                    <h4>작가 사인회 기록</h4>
+                    <p>매 분기 진행되는 작가님들과의 오프라인 만남 기록입니다.</p>
+                </div>
+            </section>
+        `),
+        '/notice': () => renderView(`
+            <section>
+                <h2 class="section-title"><span>Archive</span>공지사항</h2>
+                <div class="info-card">
+                    <p><strong>[공지]</strong> 작은컷 공식 홈페이지 리뉴얼 안내</p>
+                </div>
+                <div class="info-card">
+                    <p><strong>[안내]</strong> 동계 휴무 기간 고객센터 운영 시간 안내</p>
+                </div>
+            </section>
+        `)
+    };
+
+    function render() {
+        const hash = location.hash || '#/';
+        const path = hash.replace('#','');
+        setActive(path);
+        (views[path] || views['/'])();
+    }
+
+    window.addEventListener('hashchange', render);
+    render();
+})();
+</script>
 
 </body>
 </html>
