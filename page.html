@@ -3,85 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>작은컷 | JAGEUN CUT - 만화 출판사</title>
+    <title>작은컷 | JAGEUN CUT - 만화 전문 출판사</title>
 
-    <link rel="stylesheet" as="style" crossorigin
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* --- 1. 기본 설정 및 변수 --- */
         :root {
-            --bg-color: #ffffff;
-            --bg-sub: #f9f9fb;
-            --text-main: #1d1d1f;
-            --text-sub: #6e6e73;
-            --accent: #000000;
-            --border: #e5e5e7;
-            --container-width: 1100px;
+            --bg-color: #fdfdfd;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --bg-sub: #f4f4f6;
+            --text-main: #111111;
+            --text-sub: #555555;
+            --accent: #222222;
+            --border: rgba(0, 0, 0, 0.08);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            --container-width: 1200px;
+            --trans-speed: 0.4s;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: "Pretendard", -apple-system, sans-serif;
-            line-height: 1.7;
+            line-height: 1.75;
             color: var(--text-main);
             background-color: var(--bg-color);
             word-break: keep-all;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        h1, h2, h3 { font-family: 'Nanum Myeongjo', serif; font-weight: 700; letter-spacing: -0.02em; }
+        h1, h2, h3, h4 { font-family: 'Nanum Myeongjo', serif; letter-spacing: -0.03em; color: var(--text-main); }
+        a { text-decoration: none; color: inherit; transition: color 0.3s; }
+        ul { list-style: none; }
+        img, video { max-width: 100%; display: block; }
 
+        /* --- 2. 네비게이션 (반응형 + 글래스모피즘) --- */
         nav {
-            position: fixed; top: 0; width: 100%; height: 70px; padding: 0 5%;
-            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+            position: fixed; top: 0; width: 100%; height: 80px; padding: 0 5%;
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border); display: flex;
             align-items: center; justify-content: space-between; z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .logo img { height: 26px; }
-        .nav-links { display: flex; list-style: none; gap: 32px; align-items: center; }
-        .nav-links li { position: relative; }
-        .nav-links a { text-decoration: none; color: var(--text-main); font-size: 0.95rem; font-weight: 500; padding: 25px 0; display: block; }
-        .nav-links a.active { font-weight: 700; color: var(--accent); }
+        .logo img { height: 44px; transition: transform 0.3s; }
+        .logo:hover img { transform: scale(1.05); }
 
+        .nav-links { display: flex; gap: 40px; align-items: center; }
+        .nav-links > li { position: relative; padding: 25px 0; cursor: pointer; }
+        
+        .nav-links > li > a { 
+            font-size: 0.95rem; font-weight: 500; color: var(--text-sub); 
+            position: relative; 
+        }
+        .nav-links > li > a.active, .nav-links > li:hover > a { color: var(--accent); font-weight: 700; }
+        
+        /* 밑줄 애니메이션 */
+        .nav-links > li > a::after {
+            content: ''; position: absolute; width: 0; height: 1px; bottom: -4px; left: 0;
+            background-color: var(--accent); transition: width 0.3s;
+        }
+        .nav-links > li:hover > a::after, .nav-links > li > a.active::after { width: 100%; }
+
+        /* 드롭다운 메뉴 */
         .dropdown-menu {
-            position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid var(--border);
-            min-width: 220px; padding: 12px 0; border-radius: 6px; opacity: 0; visibility: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: all 0.3s;
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: #fff; border: 1px solid var(--border);
+            min-width: 220px; padding: 15px 0; border-radius: 12px;
+            opacity: 0; visibility: hidden; pointer-events: none;
+            box-shadow: var(--shadow); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .nav-links li:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-        .dropdown-menu a { padding: 10px 24px; font-size: 0.88rem; font-weight: 400; }
-        .dropdown-menu a:hover { background: var(--bg-sub); }
+        .nav-links li:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+        .dropdown-menu a { padding: 12px 24px; display: block; font-size: 0.9rem; color: var(--text-sub); }
+        .dropdown-menu a:hover { background: var(--bg-sub); color: var(--accent); }
 
-        header { height: 100vh; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
-        .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; }
-        .hero-content { position: relative; z-index: 2; padding: 0 24px; }
-        .hero-slogan { font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1.1; margin-bottom: 24px; }
+        /* 햄버거 버튼 (모바일용) */
+        .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; z-index: 1100; }
 
-        section { padding: 100px 24px; max-width: var(--container-width); margin: 0 auto; }
-        .section-title { font-size: 2.4rem; margin-bottom: 60px; }
-        .section-title span { display: block; font-size: 0.85rem; font-family: Pretendard; color: var(--text-sub); margin-bottom: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
+        /* --- 3. 히어로 섹션 (동적 타이포) --- */
+        header#hero-header { 
+            height: 100vh; width: 100%; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: videoFadeIn 1.5s forwards; }
+        @keyframes videoFadeIn { to { opacity: 0.4; } }
+        
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); }
 
-        /* Home Content Styles */
-        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; }
-        .book-card { background: var(--bg-sub); border-radius: 8px; overflow: hidden; transition: transform 0.3s; }
-        .book-card:hover { transform: translateY(-10px); }
-        .book-img { width: 100%; aspect-ratio: 3/4; background: #ddd; }
-        .book-info { padding: 24px; }
+        .hero-content { position: relative; z-index: 2; color: #fff; max-width: 90%; }
+        .hero-slogan { 
+            font-size: clamp(2.2rem, 6vw, 5rem); line-height: 1.2; margin-bottom: 30px; 
+            opacity: 0; transform: translateY(30px); animation: fadeInUp 1s 0.5s forwards;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .hero-sub { 
+            font-size: clamp(1rem, 2vw, 1.3rem); letter-spacing: 0.05em; font-weight: 300; opacity: 0; 
+            transform: translateY(20px); animation: fadeInUp 1s 0.8s forwards; 
+        }
 
-        .info-card { padding: 40px; background: var(--bg-sub); border-radius: 12px; margin-bottom: 20px; }
-        .info-card h4 { margin-bottom: 15px; font-size: 1.25rem; }
-        .timeline li { border-left: 1px solid var(--accent); padding: 0 0 40px 30px; position: relative; list-style: none; }
-        .timeline li::before { content: ""; position: absolute; left: -5px; top: 0; width: 9px; height: 9px; background: var(--accent); border-radius: 50%; }
+        /* --- 4. 공통 섹션 스타일 --- */
+        section { padding: 120px 24px; max-width: var(--container-width); margin: 0 auto; position: relative; }
+        
+        .section-title { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 80px; text-align: center; position: relative; }
+        .section-title span { 
+            display: block; font-size: 0.9rem; font-family: Pretendard; color: var(--text-sub); 
+            margin-bottom: 15px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 2px; background: var(--accent);
+            margin: 30px auto 0;
+        }
 
-        footer { padding: 80px 5%; background: #111; color: #777; font-size: 0.85rem; }
+        /* Scroll Reveal Animation Classes */
+        .reveal-item { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-item.active { opacity: 1; transform: translateY(0); }
+
+        /* --- 5. 콘텐츠별 스타일 --- */
+        /* Introduction */
+        .intro-text { 
+            font-size: 1.2rem; line-height: 2.2; text-align: center; max-width: 800px; margin: 0 auto; 
+            color: #333; 
+        }
+        .intro-text p { margin-bottom: 24px; }
+        .quote { 
+            margin-top: 60px; font-family: 'Nanum Myeongjo'; font-size: 1.8rem; font-weight: 700; 
+            color: #000; position: relative; padding: 40px 0;
+        }
+        .quote::before, .quote::after { content: '"'; font-size: 3rem; color: #ddd; position: absolute; }
+        .quote::before { top: 0; left: 45%; transform: translateX(-50%); }
+        .quote::after { bottom: -20px; left: 45%; transform: translateX(-50%); }
+
+        /* Book Grid */
+        .bg-gray { background-color: var(--bg-sub); width: 100vw; margin-left: calc(-50vw + 50%); }
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 60px 40px; }
+        
+        .book-card { 
+            background: #fff; padding: 0; border-radius: 4px; overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .book-card:hover { transform: translateY(-15px); }
+        .book-img-wrap { 
+            width: 100%; aspect-ratio: 3/4.2; overflow: hidden; position: relative; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 4px; margin-bottom: 25px;
+        }
+        .book-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+        .book-card:hover .book-img { transform: scale(1.08); }
+        
+        .book-info { padding: 0 10px; }
+        .book-genre { font-size: 0.75rem; color: #888; letter-spacing: 0.05em; font-weight: 700; margin-bottom: 10px; display: block; text-transform: uppercase; }
+        .book-info h4 { font-size: 1.35rem; margin-bottom: 12px; line-height: 1.3; }
+        .book-desc { font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; }
+
+        /* Submission & Contact Boxes */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .content-box { 
+            background: #fff; padding: 60px; border-radius: 20px; 
+            box-shadow: var(--shadow); border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+        .content-box:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .content-box h3 { font-size: 1.6rem; margin-bottom: 30px; position: relative; display: inline-block; }
+        .content-box h3::after { content:''; display: block; width: 100%; height: 1px; background: currentColor; margin-top: 10px; opacity: 0.3; }
+        .content-box.accent { background: var(--accent); color: #fff; border: none; }
+        .content-box.accent h3, .content-box.accent p { color: #fff; }
+        .content-box.accent p { opacity: 0.9; }
+
+        /* Timeline & List */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline li { 
+            border-left: 2px solid #eee; padding: 0 0 60px 40px; position: relative; 
+            list-style: none; transition: all 0.3s;
+        }
+        .timeline li::before { 
+            content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; 
+            background: #fff; border: 3px solid var(--accent); border-radius: 50%; box-shadow: 0 0 0 5px #fff;
+        }
+        .timeline li strong { display: block; font-size: 1.2rem; margin-bottom: 8px; color: var(--accent); }
+        .timeline li span { font-size: 1rem; color: var(--text-sub); display: block; line-height: 1.6; }
+
+        .list-container { max-width: 900px; margin: 0 auto; }
+        .list-item { 
+            padding: 30px; border-bottom: 1px solid var(--border); 
+            display: flex; justify-content: space-between; align-items: center; gap: 20px; 
+            transition: background 0.3s, transform 0.3s; border-radius: 10px;
+        }
+        .list-item:hover { background: var(--bg-sub); transform: scale(1.02); border-color: transparent; }
+        .list-item strong { font-size: 1.05rem; font-weight: 600; display: block; margin-bottom: 6px; }
+        .date { font-size: 0.85rem; color: #999; font-feature-settings: "tnum"; }
+
+        /* Footer */
+        footer { 
+            padding: 100px 5%; background: #1a1a1a; color: #888; font-size: 0.9rem; 
+            border-top: 1px solid #333; margin-top: 80px; 
+        }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+        .sns-links span { margin-left: 20px; cursor: pointer; transition: color 0.3s; font-weight: 600; }
+        .sns-links span:hover { color: #fff; }
+
+        /* 유틸리티 */
         .hidden { display: none !important; }
-        .view { animation: fadeIn 0.6s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .view-transition { animation: fadeRoute 0.6s ease-out; }
+        @keyframes fadeRoute { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (max-width: 850px) { .nav-links { display: none; } }
+        /* --- 6. 반응형 (Mobile) --- */
+        @media (max-width: 850px) {
+            nav { padding: 0 20px; height: 60px; }
+            .mobile-toggle { display: block; }
+            
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+                background: rgba(255,255,255,0.98); flex-direction: column; 
+                justify-content: center; align-items: flex-start; padding: 40px;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: right 0.4s ease;
+                gap: 20px;
+            }
+            .nav-links.active { right: 0; }
+            
+            .nav-links > li { width: 100%; padding: 10px 0; border-bottom: 1px solid #eee; }
+            .nav-links > li > a { font-size: 1.2rem; display: block; }
+            
+            /* 모바일 드롭다운 처리 (항상 보이게 하거나 클릭으로) */
+            .dropdown-menu { 
+                position: static; opacity: 1; visibility: visible; transform: none; 
+                box-shadow: none; border: none; background: #f9f9f9; width: 100%;
+                margin-top: 10px; padding: 10px; display: none;
+            }
+            .nav-links li.open .dropdown-menu { display: block; }
+            .nav-links li > a::after { content: ' +'; float: right; }
+            
+            .hero-slogan { font-size: 2.2rem; }
+            .section-title { font-size: 2rem; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .book-grid { grid-template-columns: 1fr; gap: 40px; }
+            .content-box { padding: 30px; }
+            .timeline li { padding-left: 25px; }
+            .list-item { flex-direction: column; align-items: flex-start; }
+            .footer-content { flex-direction: column; }
+            .sns-links span { margin-left: 0; margin-right: 20px; }
+        }
     </style>
 </head>
 
@@ -89,23 +253,26 @@
 
 <nav>
     <div class="logo">
-        <a href="#/"><img src="https://github.com/user-attachments/assets/87b269f0-faf1-499d-ac6c-f16cc964248b" alt="작은컷"></a>
+        <a href="#/">
+            <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_FQZC_dNCp2J4FIci_ZpQRhbNhzFROUsOGYnbxDH-NuhV99bV3bda5_EP0NwOUnDDNmLim9ryXGn9yZR-MxkEM6tfcYwsedF6-gnIsWu7nMqx-Ao14-r6GTQEBPLwqimuK8Thb5ZyTT5PcUCPiy7bTqTYKdytoDBrWeMNWTF2RtYmJWndm1cJhr7_yoW-Jq3aLFOnT0GEFy38l2HmIw-nKzn6O8DeVRlsNhuAQj89ycc-ECkLMhgYacOvQsspfL0Xsgt36N1KMa_TLlRaW6ywiR4e_JL-dO0XA30sVagPkkcMWWYZUv6Uv8q1OpU_iFmdnpPm1JQIoB0g2BtDmaGULDUBbANdPXS-bFzMI_ytWrpRnglDuuF1AofMrZ_fuI9CGv4mSZ-oGUjPcchO_hasX2IDVud_oZipSHxAvXErfSd-EsMJUmsEliYbZJkcF6dBFRHK9klw3fv40gVk8hbOZj8_QlhEMv06mTI9HN8jsSU1JjXQG66xgprO664QiLaYgB_CCFZoSMlR1iwYvcT4F7bxQF1nZ5NZ6UOn4iUEGGBUOVcSSNzFZEC6t4DHw2AOWxDHowjjBcPz5G8Mvj2qBB3iNG-UMPvmOwepy2-cLye2vf_W40E0W2gbomfyeKKgG5x8Vw-2S1VqjHRh9zifhYT4Kgyu0W1XdvK18zrNsmMjD4EbGXA4OGn-v7Y7ZQO-578fJyB1QiPL78nnMauzfg7i-T_c8jpfxFgVtUy2ngumGPYxawGDPJ0UBRVIVsPsjhzPZqP_FZKfLXV5te0d0zFjU_kK1RWoDQpDloJ0lr6W2wqbWxYyHInb-W5oXp8BkDIGYu5hx8dilcg6R6CsgyxcK6iDIKnL7zuS_mDxPrdaZqJGqWTjp5jF1P_sXILeb44MOzYgZFHzdAUh-Jnxefkvgc_pnOEdOij25pR0Ls3g7qrCcMyp5hAWCd-yg4IXMCiRWbvLiYv862TKEzEjsljilUw-HhYwAyBhoOX1wRyonXu0TRiYXETpi62b0qVsar53k119LNzpfwJG3UtlWLEgnlmZK_jijRWdAx67PbiH3BMbJVoSMVDMPqgdhTUQvOYXmu730dnieJub9g_jk3RhV27jKiVRP5FQ-SrrSirGHwrWSVietG54WPGQMv_HulxHRPhWamoItsh8KcDqfdlbLk8L3gdheC4vB0hEj-FGyQAHmVZmji=w1920-h919?auditContext=prefetch" alt="작은컷">
+        </a>
     </div>
-    <ul class="nav-links">
+    <div class="mobile-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="navLinks">
         <li><a href="#/" data-route="/">Home</a></li>
         <li><a href="#/books" data-route="/books">Books</a></li>
         <li><a href="#/submissions" data-route="/submissions">Submissions</a></li>
-        <li>
-            <a href="javascript:void(0)">Company Info ▾</a>
+        <li onclick="toggleDropdown(this)">
+            <a href="javascript:void(0)">Company Info</a>
             <ul class="dropdown-menu">
-                <li><a href="#/philosophy" data-route="/philosophy">출판 철학 · 편집 기준</a></li>
+                <li><a href="#/philosophy" data-route="/philosophy">회사 소개 · 출판 철학</a></li>
                 <li><a href="#/process" data-route="/process">작업 프로세스</a></li>
                 <li><a href="#/history" data-route="/history">회사 연혁</a></li>
                 <li><a href="#/partnership" data-route="/partnership">판권 · 제휴 안내</a></li>
             </ul>
         </li>
-        <li>
-            <a href="javascript:void(0)">Archive ▾</a>
+        <li onclick="toggleDropdown(this)">
+            <a href="javascript:void(0)">Archive</a>
             <ul class="dropdown-menu">
                 <li><a href="#/news" data-route="/news">출간 소식</a></li>
                 <li><a href="#/events" data-route="/events">전시 · 행사 기록</a></li>
@@ -119,203 +286,521 @@
     <video class="hero-video" autoplay muted loop playsinline>
         <source src="https://cdn.pixabay.com/video/2022/07/08/123514-728292574_large.mp4" type="video/mp4">
     </video>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1 class="hero-slogan">한 컷의 진심을<br>책으로 완성하다</h1>
-        <p style="letter-spacing:0.3em; font-weight:300; opacity:0.7;">JAGEUN CUT PUBLISHING</p>
+        <h1 class="hero-slogan">작은 컷에서<br>시작되는 이야기</h1>
+        <p class="hero-sub">해외 만화를 번역·출판하는 만화 전문 출판사 작은컷</p>
     </div>
 </header>
 
 <main id="app"></main>
 
 <div id="home-sections">
-    <section id="home-books">
-        <h2 class="section-title"><span>New Releases</span>최신 출간 도서</h2>
-        <div class="book-grid">
-            <div class="book-card">
-                <div class="book-img"><img src="https://github.com/user-attachments/assets/a0cb901c-a2eb-457c-9f93-c6bbfbf0dd21" style="width:100%;height:100%;object-fit:cover;"></div>
-                <div class="book-info"><h4>작품 제목 01</h4><p>작가명 | 작은컷 편집부</p></div>
-            </div>
-            <div class="book-card">
-                <div class="book-img"><img src="https://github.com/user-attachments/assets/1bbeff5a-ff8e-4dd0-a082-91189494f83f" style="width:100%;height:100%;object-fit:cover;"></div>
-                <div class="book-info"><h4>작품 제목 02</h4><p>작가명 | 작은컷 편집부</p></div>
-            </div>
-            <div class="book-card">
-                <div class="book-img"><img src="https://github.com/user-attachments/assets/42318a5d-fe1c-4eb4-ba75-13aa1184dd2d" style="width:100%;height:100%;object-fit:cover;"></div>
-                <div class="book-info"><h4>작품 제목 03</h4><p>작가명 | 작은컷 편집부</p></div>
+    <section id="home-intro" class="reveal-item">
+        <h2 class="section-title"><span>Introduction</span>회사 소개</h2>
+        <div class="intro-text">
+            <p>작은컷은 해외의 다양한 만화를 발굴해 한국 독자에게 소개하는 만화 전문 출판사입니다.</p>
+            <p>우리는 “번역을 한다”는 말로는 다 담을 수 없는 일을 합니다. 작품을 읽고, 조사하고, 다시 읽고, 마지막 한 컷까지 흐름이 끊기지 않도록 언어의 결을 다듬습니다.</p>
+            <p>기획부터 번역·감수, 식자, 표지 디자인, 제작 및 인쇄 감리까지—한 권의 책이 독자의 책장에 꽂히기까지 필요한 과정을 내부에서 촘촘하게 연결합니다.</p>
+            <p>특히 컷과 컷 사이의 숨결, 말풍선의 리듬, 의성어·의태어의 질감을 살리기 위해 작품별 전담 편집 체계를 운영합니다.</p>
+            <p style="color: var(--text-sub); font-size: 1rem; margin-top: 40px;">
+                작은컷은 대형 라인업보다 ‘정말 오래 곁에 남을 작품’을 우선합니다. <br>낯선 나라의 이야기가 낯설지 않게, 그러나 원작의 온도는 흐리지 않게 전합니다.
+            </p>
+            <div class="quote">
+                익숙하지 않아서 더 새로운 이야기,<br>작은 컷에서 시작되는 큰 울림을 전합니다.
             </div>
         </div>
     </section>
 
-    <section id="home-submissions" style="background:var(--bg-sub); max-width:100%;">
-        <div style="max-width:var(--container-width); margin:0 auto;">
-            <h2 class="section-title"><span>Submissions</span>원고 투고 안내</h2>
-            <div class="info-card" style="background:#fff;">
-                <p style="font-size:1.1rem; line-height:1.8;">작은컷은 장르와 형식에 구애받지 않고, 종이 위에서 가장 빛날 수 있는 이야기를 기다립니다. 상시 투고를 통해 새로운 작가님들과의 소중한 인연을 기대합니다.</p>
-                <div style="margin-top:30px; display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div><strong>접수 메일</strong><p>submission@jageuncut.com</p></div>
-                    <div><strong>검토 기간</strong><p>접수 후 최대 4주 (개별 회신)</p></div>
+    <div class="bg-gray">
+        <section id="home-books" class="reveal-item">
+            <h2 class="section-title"><span>Lineup</span>대표 도서</h2>
+            <div class="book-grid">
+                <div class="book-card">
+                    <div class="book-img-wrap"><img src="https://github.com/user-attachments/assets/a0cb901c-a2eb-457c-9f93-c6bbfbf0dd21" class="book-img"></div>
+                    <div class="book-info">
+                        <span class="book-genre">SF / 드라마 | 원작: 프랑스</span>
+                        <h4>비 오는 날의 행성</h4>
+                        <p class="book-desc">비가 멈추지 않는 행성에서, 소년은 기억을 수리하는 일을 한다.</p>
+                    </div>
                 </div>
+                <div class="book-card">
+                    <div class="book-img-wrap"><img src="https://github.com/user-attachments/assets/1bbeff5a-ff8e-4dd0-a082-91189494f83f" class="book-img"></div>
+                    <div class="book-info">
+                        <span class="book-genre">일상 / 힐링 | 원작: 일본</span>
+                        <h4>토요일에만 열리는 서점</h4>
+                        <p class="book-desc">일주일에 하루, 책을 사면 지난 시간을 돌려받을 수 있다.</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-img-wrap"><img src="https://github.com/user-attachments/assets/42318a5d-fe1c-4eb4-ba75-13aa1184dd2d" class="book-img"></div>
+                    <div class="book-info">
+                        <span class="book-genre">판타지 / 미스터리 | 원작: 폴란드</span>
+                        <h4>검은 숲의 아이들</h4>
+                        <p class="book-desc">숲에 들어간 아이는 반드시 하나를 잃고 돌아온다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section id="home-submissions" class="reveal-item">
+        <h2 class="section-title"><span>Contact</span>투고 및 제휴</h2>
+        <div class="contact-grid">
+            <div class="content-box">
+                <h3>원고 투고 안내</h3>
+                <p>작은컷은 새로운 감각을 가진 창작자분들의 원고를 상시 기다립니다.</p>
+                <br>
+                <p style="font-size: 0.95rem; color: var(--text-sub);">
+                    • 시놉시스, 캐릭터 시트, 완성 원고 3화 이상 (PDF)<br>
+                    • 연재 플랫폼/연재 이력 또는 포트폴리오 링크(선택)
+                </p>
+                <p style="margin-top:20px; font-weight:700;">submission@jageuncut.com</p>
+            </div>
+            <div class="content-box accent">
+                <h3 style="border-color: rgba(255,255,255,0.5);">비즈니스 문의</h3>
+                <p>판권 수출입 및 2차 저작물 제휴 문의는 아래 메일로 보내주세요.</p>
+                <p style="font-size: 1.5rem; font-weight: 700; margin: 20px 0;">rights@jageuncut.com</p>
+                <p style="opacity: 0.7; font-size: 0.9rem;">
+                    (평일 10:00–18:00 / 점심 12:30–13:30, 주말·공휴일 휴무)
+                </p>
             </div>
         </div>
     </section>
 </div>
 
 <footer>
-    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;">
+    <div class="footer-content">
         <div>
-            <p><strong>작은컷 출판사</strong></p>
-            <p style="margin-top:10px;">서울특별시 마포구 어딘가 123 작은컷 빌딩</p>
+            <p style="font-size: 1.1rem; color: #fff; margin-bottom: 15px;"><strong>작은컷 출판사 (JAGEUN CUT)</strong></p>
+            <p style="opacity: 0.6; line-height: 1.6;">서울특별시 마포구 어딘가로 123-45 (04123) <br> 대표번호: 02-1234-5678 | 사업자등록번호: 123-45-67890</p>
         </div>
-        <div style="display:flex; gap:20px;">
+        <div class="sns-links">
             <span>Instagram</span> <span>Twitter</span> <span>Youtube</span>
         </div>
     </div>
 </footer>
 
 <script>
-(function () {
-    const app = document.getElementById('app');
-    const homeSections = document.getElementById('home-sections');
-    const hero = document.getElementById('hero-header');
-    const navLinks = Array.from(document.querySelectorAll('.nav-links a[data-route]'));
-
-    function setActive(path) {
-        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('data-route') === path));
+    // 1. 모바일 메뉴 제어
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        nav.classList.toggle('active');
+        
+        const btn = document.querySelector('.mobile-toggle');
+        btn.textContent = nav.classList.contains('active') ? '✕' : '☰';
     }
 
-    function renderView(html) {
-        hero.classList.add('hidden');
-        homeSections.classList.add('hidden');
-        app.innerHTML = '<div class="view">' + html + '</div>';
-        window.scrollTo(0,0);
+    function toggleDropdown(el) {
+        // 모바일 환경에서만 클릭으로 드롭다운 열기
+        if (window.innerWidth <= 850) {
+            el.classList.toggle('open');
+        }
     }
 
-    function renderHome() {
-        hero.classList.remove('hidden');
-        homeSections.classList.remove('hidden');
-        app.innerHTML = '';
-        window.scrollTo(0,0);
-    }
-
-    const views = {
-        '/': renderHome,
-        '/books': () => {
-            renderHome();
-            const el = document.getElementById('home-books');
-            window.scrollTo({ top: el.offsetTop - 70, behavior: 'smooth' });
-        },
-        '/submissions': () => {
-            renderHome();
-            const el = document.getElementById('home-submissions');
-            window.scrollTo({ top: el.offsetTop - 70, behavior: 'smooth' });
-        },
-        '/philosophy': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>Our Belief</span>출판 철학 및 편집 기준</h2>
-                <div class="info-card">
-                    <h4>"화면 너머, 손끝에 남는 가치"</h4>
-                    <p>작은컷은 디지털 콘텐츠의 범람 속에서 '책'이라는 물성이 주는 힘을 믿습니다. 우리는 단순히 만화를 인쇄하는 것이 아니라, 작품이 가진 고유의 호흡을 종이 위에 가장 최적화된 형태로 구현하는 것을 목표로 합니다.</p>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
-                    <div class="info-card">
-                        <h4>편집 원칙</h4>
-                        <p>원작의 의도를 해치지 않는 세밀한 로컬라이징, 가독성을 최우선으로 하는 식자 설계, 작품의 분위기를 결정짓는 종이 선정을 고수합니다.</p>
-                    </div>
-                    <div class="info-card">
-                        <h4>품질 관리</h4>
-                        <p>모든 도서는 편집자가 직접 인쇄소 감리에 참여하여, 데이터와 실제 결과물의 오차를 최소화합니다.</p>
-                    </div>
-                </div>
-            </section>
-        `),
-        '/process': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>Work Flow</span>작업 프로세스</h2>
-                <div style="display:flex; flex-direction:column; gap:20px;">
-                    <div class="info-card"><strong>STEP 01. 기획 및 계약</strong><p>국내외 우수 IP 발굴 및 작가와의 긴밀한 소통을 통한 출간 방향 설정</p></div>
-                    <div class="info-card"><strong>STEP 02. 편집 및 디자인</strong><p>작품별 전담 편집자의 로컬라이징과 북 디자이너의 맞춤형 표지/내지 설계</p></div>
-                    <div class="info-card"><strong>STEP 03. 인쇄 및 제작</strong><p>협력 인쇄사와의 파트너십을 통한 고품질 제작 및 철저한 후가공 관리</p></div>
-                    <div class="info-card"><strong>STEP 04. 유통 및 마케팅</strong><p>온·오프라인 서점 유통 및 작품별 타겟 독자를 위한 맞춤형 프로모션</p></div>
-                </div>
-            </section>
-        `),
-        '/history': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>History</span>회사 연혁</h2>
-                <ul class="timeline">
-                    <li><strong>2024</strong> <span>오리지널 IP 확장 및 통합 물류 시스템 구축</span></li>
-                    <li><strong>2022</strong> <span>자사 편집 스타일 가이드 정립 및 품질 인증 획득</span></li>
-                    <li><strong>2021</strong> <span>누적 출간 종수 100종 돌파</span></li>
-                    <li><strong>2020</strong> <span>해외 판권 수출입 비즈니스 개시</span></li>
-                    <li><strong>2019</strong> <span>작은컷(JAGEUN CUT) 출판사 설립</span></li>
-                </ul>
-            </section>
-        `),
-        '/partnership': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>Business</span>판권 및 제휴 안내</h2>
-                <div class="info-card">
-                    <h4>2차 저작권 제휴</h4>
-                    <p>작은컷이 보유한 우수한 만화 IP의 영상화, 게임화, 굿즈 제작 등 2차 저작권 관련 제휴를 환영합니다.</p>
-                    <p style="margin-top:15px; font-weight:bold;">Contact: biz@jageuncut.com</p>
-                </div>
-                <div class="info-card">
-                    <h4>판권 수출입 문의</h4>
-                    <p>한국 만화의 해외 수출 및 해외 우수 도서의 국내 출간 판권 문의는 아래 메일로 부탁드립니다.</p>
-                    <p style="margin-top:15px; font-weight:bold;">Contact: rights@jageuncut.com</p>
-                </div>
-            </section>
-        `),
-        '/news': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>Archive</span>출간 소식</h2>
-                <div class="info-card">
-                    <p style="color:var(--text-sub);">[2024.11.20] 신간 <작품 제목 01> 1~3권 동시 출간 안내</p>
-                </div>
-                <div class="info-card">
-                    <p style="color:var(--text-sub);">[2024.11.05] <작품 제목 02> 완결 기념 한정판 박스 세트 예약 판매 시작</p>
-                </div>
-                <div class="info-card">
-                    <p style="color:var(--text-sub);">[2024.10.25] 절판 도서 <작품 제목 03> 재판 인쇄 확정 안내</p>
-                </div>
-            </section>
-        `),
-        '/events': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>Archive</span>전시 · 행사 기록</h2>
-                <div class="info-card">
-                    <h4>2024 서울 국제 도서전 참가</h4>
-                    <p>독자들과 직접 만나는 소중한 시간이었습니다. 방문해주신 모든 분께 감사드립니다.</p>
-                </div>
-                <div class="info-card">
-                    <h4>작가 사인회 기록</h4>
-                    <p>매 분기 진행되는 작가님들과의 오프라인 만남 기록입니다.</p>
-                </div>
-            </section>
-        `),
-        '/notice': () => renderView(`
-            <section>
-                <h2 class="section-title"><span>Archive</span>공지사항</h2>
-                <div class="info-card">
-                    <p><strong>[공지]</strong> 작은컷 공식 홈페이지 리뉴얼 안내</p>
-                </div>
-                <div class="info-card">
-                    <p><strong>[안내]</strong> 동계 휴무 기간 고객센터 운영 시간 안내</p>
-                </div>
-            </section>
-        `)
+    // 2. 스크롤 애니메이션 (Intersection Observer)
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
     };
 
-    function render() {
-        const hash = location.hash || '#/';
-        const path = hash.replace('#','');
-        setActive(path);
-        (views[path] || views['/'])();
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    function initAnimations() {
+        const elements = document.querySelectorAll('.reveal-item');
+        elements.forEach(el => observer.observe(el));
     }
 
-    window.addEventListener('hashchange', render);
-    render();
-})();
+    // 3. 라우팅 로직 (SPA)
+    (function () {
+        const app = document.getElementById('app');
+        const homeSections = document.getElementById('home-sections');
+        const hero = document.getElementById('hero-header');
+        const navLinks = Array.from(document.querySelectorAll('.nav-links a[data-route]'));
+
+        function setActive(path) {
+            navLinks.forEach(a => {
+                const isActive = a.getAttribute('data-route') === path;
+                a.classList.toggle('active', isActive);
+            });
+            // 메뉴 클릭 시 모바일 메뉴 닫기
+            document.getElementById('navLinks').classList.remove('active');
+            document.querySelector('.mobile-toggle').textContent = '☰';
+        }
+
+        function renderView(html) {
+            hero.classList.add('hidden');
+            homeSections.classList.add('hidden');
+            app.innerHTML = '<div class="view-transition">' + html + '</div>';
+            window.scrollTo(0,0);
+            
+            // 동적으로 생성된 콘텐츠에도 애니메이션 적용을 위해 딜레이 후 클래스 추가
+            setTimeout(() => {
+                const contentBoxes = app.querySelectorAll('.content-box, .timeline, .list-item');
+                contentBoxes.forEach((el, index) => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(20px)';
+                    el.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, 50);
+                });
+            }, 100);
+        }
+
+        function renderHome() {
+            hero.classList.remove('hidden');
+            homeSections.classList.remove('hidden');
+            app.innerHTML = '';
+            window.scrollTo(0,0);
+            initAnimations(); // 홈 요소들 애니메이션 재설정
+        }
+
+        const views = {
+            '/': renderHome,
+            '/books': () => {
+                renderHome();
+                setTimeout(() => {
+                    const el = document.getElementById('home-books');
+                    if(el) el.scrollIntoView({behavior: 'smooth'});
+                }, 100);
+            },
+            '/submissions': () => {
+                renderHome();
+                setTimeout(() => {
+                    const el = document.getElementById('home-submissions');
+                    if(el) el.scrollIntoView({behavior: 'smooth'});
+                }, 100);
+            },
+
+            '/philosophy': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>Philosophy</span>회사 소개 및 출판 철학</h2>
+
+                    <div class="content-box">
+                        <h3>작은컷은 어떤 출판사인가</h3>
+                        <p>작은컷(JAGEUN CUT)은 해외 만화·그래픽노블을 중심으로 “읽히는 번역”과 “소장되는 제작”을 함께 다루는 만화 전문 출판사입니다.</p>
+                        <p>우리는 작품을 단순 수입해 찍어내는 방식이 아니라, 한 권의 책이 <strong>한국 독자의 언어로 자연스럽게 숨 쉬도록</strong> 기획·번역·편집·디자인을 재구성합니다. 그 과정에서 원작의 정서와 작가의 문체는 흐리지 않되, 독자가 읽는 흐름은 끊기지 않게 만드는 것을 원칙으로 삼습니다.</p>
+                        <p style="color: var(--text-sub); font-size: 0.95rem; margin-top:15px; border-left: 3px solid var(--accent); padding-left: 15px;">
+                            내부 편집부·판권팀·번역/로컬라이징·디자인·제작이 프로젝트 단위로 묶여 움직이며, 한 권당 책임편집자(Lead Editor)가 전 과정을 관리합니다.
+                        </p>
+                    </div>
+                    <br>
+                    <div class="content-box">
+                        <h3>우리가 고르는 이야기</h3>
+                        <p>작은컷은 장르의 유행보다 ‘작품의 지속성’을 먼저 봅니다. 한 번 읽고 끝나는 이야기보다는, 시간이 지나도 다시 펼치고 싶은 컷을 찾습니다.</p>
+                        <p style="margin-top: 20px; color: var(--text-sub); font-size: 0.95rem; background: var(--bg-sub); padding: 20px; border-radius: 8px;">
+                            • 서사의 밀도(구성/리듬/여백)<br>• 그림의 고유한 필치와 톤<br>• 번역 가능한 언어의 잠재력<br>
+                            • 국내 독자에게 새로운 감각을 주는 주제<br>• 작가 커뮤니케이션 가능성
+                        </p>
+                        <p style="margin-top: 15px;">계약 검토 단계에서 작품의 톤과 독자층을 명확히 정의하고, 표지·부록·후기 등 ‘완성본의 형태’를 역으로 설계한 뒤 제작에 들어갑니다.</p>
+                    </div>
+                    <br>
+                    <div class="content-box">
+                        <h3>번역의 깊이: 컷과 말풍선 사이</h3>
+                        <p>만화 번역은 문장을 옮기는 작업이 아니라, <strong>컷의 속도와 말풍선의 호흡</strong>을 한국어로 다시 배치하는 일이라고 믿습니다.</p>
+                        <p>작은컷은 작품마다 전담 번역가를 배치하고, 책임편집자와 1:1로 감수를 진행합니다. 인명·지명·전문용어는 내부 스타일 가이드로 통일하되, 작품의 문체는 최대한 유지합니다.</p>
+                    </div>
+                    <br>
+                    <div class="content-box">
+                        <h3>물성의 고집: ‘진짜 책’으로 남기기</h3>
+                        <p>작은컷은 “책으로 소장하는 경험”을 중요하게 생각합니다. 같은 원고라도 종이의 질감, 잉크의 농도, 코팅의 방식, 제본의 압력에 따라 컷의 인상이 달라집니다.</p>
+                        <p>그래서 제작 단계에서 <strong>테스트 인쇄(Proof)</strong>를 여러 차례 진행하고, 작품의 분위기에 맞는 종이와 후가공을 선택합니다.</p>
+                    </div>
+                </section>
+            `),
+
+            '/process': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>Internal Process</span>작업 프로세스</h2>
+
+                    <div class="content-box" style="margin-bottom: 50px;">
+                        <h3>한 권이 나오기까지</h3>
+                        <p>작은컷은 작품별 프로젝트 방식으로 움직입니다. 계약 체결 이후에는 내부 킥오프를 진행하고, 일정표(번역·감수·디자인·제작·인쇄·유통)를 확정합니다.</p>
+                        <p style="color: var(--text-sub); font-size: 0.95rem;">
+                            평균적으로 단권은 3–5개월, 시리즈/전권 세트는 6–10개월의 제작 기간을 기준으로 운영됩니다.
+                        </p>
+                    </div>
+
+                    <ul class="timeline">
+                        <li><strong>01. IP Discovery & Contract</strong> <span>작품 발굴 → 샘플 검토 → 출간 제안서 작성 → 판권 계약 및 로열티/부수/권역 조건 확정</span></li>
+                        <li><strong>02. Editorial Planning</strong> <span>독자층 정의, 출간 포맷(단행본/합본/세트), 부록·후기·해설 여부 결정, 제작 스펙(판형/지류/후가공) 설계</span></li>
+                        <li><strong>03. Deep Translation</strong> <span>전담 번역 1차 → 사실관계/톤 감수 → 리듬/가독성 2차 감수 → 용어집/스타일가이드 확정</span></li>
+                        <li><strong>04. Lettering & Layout</strong> <span>전용 식자/말풍선 줄바꿈/자간 조정, 컷 흐름을 해치지 않도록 페이지 단위로 레이아웃 점검</span></li>
+                        <li><strong>05. Cover & Visual Design</strong> <span>표지 콘셉트 시안(2–4안) 제작 → 원작사/작가 협의(필요 시) → 띠지/내지 요소(목차, 연표 등) 디자인</span></li>
+                        <li><strong>06. Proof & Master Printing</strong> <span>테스트 인쇄(색/농도/종이 질감) → 수정 반영 → 최종 감리. 편집자가 직접 인쇄소에서 컬러·제본 상태를 확인합니다.</span></li>
+                        <li><strong>07. Distribution & Launch</strong> <span>온·오프라인 서점 입고, 예약판매 페이지/서평단/굿즈 기획, 출간 후 재고/재쇄 판단까지 모니터링</span></li>
+                        <li><strong>08. Long Tail Management</strong> <span>피드백 수집, 오탈자/표기 업데이트, 재판 시 품질 개선(종이/후가공/표지 디테일) 반영</span></li>
+                    </ul>
+
+                    <div class="content-box" style="margin-top: 50px; background: #f0f0f5;">
+                        <h3>품질 기준(내부 체크리스트)</h3>
+                        <p>이 기준을 통과해야만 출고 가능한 상태로 판단합니다. 작은컷이 ‘느리게’ 보일 때가 있어도, 그 속도는 책의 완성도를 위한 속도입니다.</p>
+                        <p style="margin-top: 15px; font-weight: 600; color: var(--text-sub);">
+                            • 말풍선 가독성 (줄바꿈/한글 자간/문장 길이)<br>
+                            • 용어/호칭 일관성<br>
+                            • 의성어/의태어의 톤<br>
+                            • 컷 흐름과 인쇄 농담/색역 안정성
+                        </p>
+                    </div>
+                </section>
+            `),
+
+            '/history': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>Journey</span>회사 연혁</h2>
+
+                    <div class="content-box" style="margin-bottom: 50px;">
+                        <h3>작은컷의 시간</h3>
+                        <p>작은컷은 2019년, 해외 만화와 그래픽노블을 ‘책다운 책’으로 만들고 싶다는 몇 명의 편집자와 디자이너가 모여 시작했습니다.</p>
+                        <p>초기에는 연 6~8종의 작은 라인업으로 출발했지만, 번역·감수·제작 체계를 내부화하며 출간 종수와 파트너십을 확장해왔습니다.</p>
+                    </div>
+
+                    <ul class="timeline">
+                        <li><strong>2026</strong> <span>해외 신작 라인업 ‘CUT WORLD’ 런칭 및 국내 독립서점 공동 프로모션 확대</span></li>
+                        <li><strong>2025</strong> <span>누적 출간 180종 돌파, 작품별 전담 번역·감수 체계 고도화 및 제작 스펙 표준화</span></li>
+                        <li><strong>2024</strong> <span>누적 출간 종수 150종 돌파 및 유럽 그래픽노블 라인업 확장</span></li>
+                        <li><strong>2023</strong> <span>『비 오는 날의 행성』 번역 부문 주목작 선정(국내 만화/번역 관련 시상·선정 프로그램)</span></li>
+                        <li><strong>2022</strong> <span>자사 디자인 스튜디오 ‘컷앤디(CUT&DI)’ 설립, 표지/식자/내지 제작 내재화</span></li>
+                        <li><strong>2021</strong> <span>일본·프랑스 주요 에이전시와 정기 피칭 라인 구축, 연간 출간 20종 체계 확립</span></li>
+                        <li><strong>2020</strong> <span>해외 유수 출판사(프랑스, 일본 등)와 전략적 파트너십 체결</span></li>
+                        <li><strong>2019</strong> <span>작은컷(JAGEUN CUT) 출판사 설립 및 첫 라인업 출간</span></li>
+                    </ul>
+
+                    <div class="content-box" style="margin-top: 50px;">
+                        <h3>앞으로의 방향</h3>
+                        <p>작은컷은 해외 만화 ‘수입’에 머물지 않고, 국내 창작자의 작품이 해외에서 소개될 수 있도록 판권 네트워크와 기획 역량을 함께 키우고 있습니다.</p>
+                        <p style="color: var(--text-sub); font-size: 0.95rem;">국내–해외를 잇는 “작은 다리”가 되는 것, 그게 작은컷이 다음으로 가려는 길입니다.</p>
+                    </div>
+                </section>
+            `),
+
+            '/partnership': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>Business</span>판권 및 제휴 안내</h2>
+                    
+                    <div class="contact-grid">
+                        <div class="content-box">
+                            <h3>판권 수출입 (Rights)</h3>
+                            <p>전 세계 만화·그래픽노블의 출판권을 다룹니다. 해외의 수작을 국내에 소개하고 싶거나, 한국의 작품을 해외에 알리고 싶은 파트너의 연락을 기다립니다.</p>
+                            <p style="color: var(--text-sub); margin-top: 15px; font-size: 0.9rem;">
+                                [검토 정보] 작품명, 샘플 PDF, 권역/언어, 제안 조건
+                            </p>
+                            <p style="font-weight:700; margin-top: 15px; color: var(--accent);">rights@jageuncut.com</p>
+                        </div>
+
+                        <div class="content-box">
+                            <h3>B2B 및 2차 저작물</h3>
+                            <p>도서 대량 구매, 기업 제휴, 교육/기관 납품, 영화·드라마·애니메이션·게임화 등 IP 활용 제휴 문의는 아래로 부탁드립니다.</p>
+                             <p style="font-weight:700; margin-top: 15px; color: var(--accent);">biz@jageuncut.com</p>
+                        </div>
+                        
+                        <div class="content-box">
+                            <h3>해외 출판 & 공동 제작</h3>
+                            <p>공동 제작(Co-edition), 현지화(Localization), 표지/디자인 리패키징 등 다양한 형태의 협업이 가능합니다. 해외 도서전 미팅도 환영합니다.</p>
+                        </div>
+
+                        <div class="content-box">
+                            <h3>서점/독립서점 협업</h3>
+                            <p>독립서점과의 스탬프 투어, 테마 진열, 토크 행사, 전시형 판매 등을 함께 기획합니다. 작은 공간의 기획을 언제나 환영합니다.</p>
+                             <p style="font-weight:700; margin-top: 15px; color: var(--accent);">store@jageuncut.com</p>
+                        </div>
+                    </div>
+                </section>
+            `),
+
+            '/news': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>News</span>출간 소식</h2>
+
+                    <div class="content-box" style="margin-bottom: 40px;">
+                        <h3>새로 나온 책, 다시 만나는 책</h3>
+                        <p>작은컷의 출간 소식과 재판(재쇄) 안내를 기록합니다. 예약 판매, 특전 구성, 서평단 일정 등은 공지사항에서 함께 확인하실 수 있습니다.</p>
+                    </div>
+
+                    <div class="list-container">
+                        <div class="list-item">
+                            <div>
+                                <strong>[신간] 『밤의 공업지대』 정식 출간 — 초판 한정 엽서 세트 동봉</strong>
+                                <span class="date">2026.01.16 | 라인업: 현대 드라마</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>[신간] 『도시의 마지막 컷』 예약 판매 오픈 및 북트레일러 공개</strong>
+                                <span class="date">2025.12.03 | 라인업: SF</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>[재판] 『토요일에만 열리는 서점』 6쇄 인쇄 및 표지 코팅 사양 개선 안내</strong>
+                                <span class="date">2025.11.08 | 재쇄</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>[신간] 『검은 숲의 아이들』 전권 세트(1–4권) 출간 및 합본 박스 출시</strong>
+                                <span class="date">2025.10.22 | 세트</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>[신간] 『비 오는 날의 행성』 개정판 출간 — 오탈자/표기 수정 및 해설 수록</strong>
+                                <span class="date">2025.07.05 | 개정판</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>[신간] 『유리로 만든 계절』 출간 — 작가 인터뷰(번역) 별책 부록 포함</strong>
+                                <span class="date">2025.03.19 | 그래픽노블</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>[재판] 『도서관의 오후』 3쇄 확정 및 내지 종이 변경 안내</strong>
+                                <span class="date">2024.11.20 | 재쇄</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `),
+
+            '/events': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>Events</span>전시 · 행사 기록</h2>
+
+                    <div class="content-box" style="margin-bottom: 40px;">
+                        <h3>만나는 자리</h3>
+                        <p>작은컷은 독자와 작품이 직접 만나는 자리를 중요하게 생각합니다. 서점 행사, 전시, 북토크, 도서전 참가 기록을 남깁니다.</p>
+                    </div>
+
+                    <div class="list-container">
+                        <div class="list-item">
+                            <div>
+                                <strong>2025 서울 국제 도서전(SIBF) 작은컷 부스 운영 — ‘번역 만화의 제작’ 미니 세미나</strong>
+                                <span class="date">2025.06.26 - 06.30 | 코엑스</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>합정 ‘레터프레스’ 협업 전시: 표지 테스트 인쇄(Proof) 공개</strong>
+                                <span class="date">2025.09.07 - 09.22 | 전시</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>망원동 ‘작은책방’ 번역자 토크 콘서트 — 말풍선의 호흡과 리듬</strong>
+                                <span class="date">2025.04.12 | 토크</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>프랑스 앙굴렘 국제 만화 축제 — 파트너 미팅 및 신작 피칭</strong>
+                                <span class="date">2025.01.23 - 01.26 | 해외</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>2024 서울 국제 도서전(SIBF) ‘번역 만화의 세계’ 기획전 참가</strong>
+                                <span class="date">2024.06.26 - 06.30 | 코엑스</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>신간 『유리로 만든 계절』 출간 기념 낭독회(번역·편집 노트 공개)</strong>
+                                <span class="date">2024.03.29 | 서점 행사</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `),
+
+            '/notice': () => renderView(`
+                <section>
+                    <h2 class="section-title"><span>Notice</span>공지사항</h2>
+
+                    <div class="content-box" style="margin-bottom: 40px;">
+                        <h3>안내드립니다</h3>
+                        <p>홈페이지/배송/서평단/행사 등 운영 관련 안내를 공지합니다. 빠른 문의는 이메일을 이용해 주세요.</p>
+                        <p style="color: var(--text-sub); margin-top: 10px;">고객센터: help@jageuncut.com</p>
+                    </div>
+
+                    <div class="list-container">
+                        <div class="list-item">
+                            <div>
+                                <strong>설 연휴 배송/고객센터 운영 안내</strong>
+                                <span class="date">2026.01.20 | 배송</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>『밤의 공업지대』 초판 특전(엽서 세트) 수량 안내</strong>
+                                <span class="date">2026.01.14 | 출간</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>공식 홈페이지 리뉴얼 및 서버 점검 안내</strong>
+                                <span class="date">2025.12.01 | 웹</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>개인정보 처리방침 개정 및 공지</strong>
+                                <span class="date">2025.11.10 | 정책</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>연말 물류량 증가에 따른 도서 수령 지연 안내</strong>
+                                <span class="date">2025.11.01 | 배송</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item">
+                            <div>
+                                <strong>서평단 운영 안내(지원/발표/리뷰 작성 가이드)</strong>
+                                <span class="date">2025.06.10 | 서평단</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `)
+        };
+
+        function render() {
+            const hash = location.hash || '#/';
+            const path = hash.replace('#','');
+            setActive(path);
+            (views[path] || views['/'])();
+        }
+
+        window.addEventListener('hashchange', render);
+        window.addEventListener('load', render);
+    })();
 </script>
 
 </body>
